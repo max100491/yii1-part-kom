@@ -1,55 +1,82 @@
 <?php
 
-class PartKom extends CComponent
+class PartKom extends CApplicationComponent
 {
     
     /**
      * Логин пользователя в системе «ПартКом».
      * @var string
      */
-    public $login;
+    protected $login;
 
     /**
      * Пароль пользователя в системе «ПартКом».
      * @var string
      */
-    public $password;
+    protected $password;
 
+    /**
+     * WSDL веб-сервиса поиска детали
+     * @var string
+     */
+    public $WSDLsearch;
+
+    private $params = [];
+
+    public function setLogin($login)
+    {
+        $this->login = $login;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
 
     public function init()
     {
+        $params['login']    = $this->login;
+        $params['password'] = $this->password;
         return parent::init();
+    }
+
+    public function getSoapClientSearch()
+    {
+        return new SoapClient($this->WSDLsearch);
     }
 
     /**
      * Осуществляет поиск предложений по указанной детали в базе данных «ПартКом».
      * Принимает на вход набор фильтров поиска.
-     * Возвращает коллекцию объектов DetailItem, содержащих информацию о предложении.
-     * @param  string $value [description]
-     * @return [type]        [description]
+     * @param  string  $number           Номер искомой детали
+     * @param  integer $makerId         Уникальный идентификатор производителя в системе «ПартКом». Может быть получен из справочника производителей MakersDict.
+     * @param  boolean $findSubstitutes Флаг для поиска с заменами и аналогами или без них.
+     * @param  boolean $store           Флаг для поиска только в наличии склада «ПартКом».
+     * @param  boolean $reCross         Флаг для включения в результаты кроссов к найденным заменам и аналогам.
+     * @return array                    Возвращает коллекцию объектов DetailItem, содержащих информацию о предложении.
      */
-    public function findDetail()
+    public function findDetail($number, $makerId, $findSubstitutes=true, $store=true, $reCross=false)
     {
-        # code...
+        return $this->soapClientSearch->findDetail($this->login, $this->password,$number,$makerId,$findSubstitutes,$store,$reCross);
     }
 
     /**
      * Предоставляет доступ к справочнику производителей в системе «ПартКом».
-     * Возвращает коллекцию объектов Maker, содержащих информацию о производителе.
-     * @return [type] [description]
+     * @return array Возвращает коллекцию объектов Maker, содержащих информацию о производителе.
      */
     public function getMakersDict()
     {
-        # code...
+        return $this->soapClientSearch->getMakersDict($this->login, $this->password);
     }
 
     /**
      * Возвращает производителей по указанному номеру.
-     * @return [type] [description]
+     * @param  string $number Номер детали
+     * @return array  Коллекция, содержащая информацию о производителях
      */
-    public function getMakersByNumber()
+    public function getMakersByNumber($number)
     {
-        # code...
+        return $this->soapClientSearch->getMakersByNumber($this->login, $this->password, $number);
     }
 }
 ?>
