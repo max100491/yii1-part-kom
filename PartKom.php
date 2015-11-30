@@ -1,7 +1,5 @@
 <?php
-/**
-*   
-*/
+
 class PartKom extends CComponent
 {
     
@@ -16,7 +14,7 @@ class PartKom extends CComponent
      * @var string
      */
     public $password;
-    
+
 
     public function init()
     {
@@ -30,7 +28,26 @@ class PartKom extends CComponent
      * @param  string $value [description]
      * @return [type]        [description]
      */
-    public function findDetail($value='')
+    public function findDetail()
+    {
+        # code...
+    }
+
+    /**
+     * Предоставляет доступ к справочнику производителей в системе «ПартКом».
+     * Возвращает коллекцию объектов Maker, содержащих информацию о производителе.
+     * @return [type] [description]
+     */
+    public function getMakersDict()
+    {
+        # code...
+    }
+
+    /**
+     * Возвращает производителей по указанному номеру.
+     * @return [type] [description]
+     */
+    public function getMakersByNumber()
     {
         # code...
     }
