@@ -21,8 +21,6 @@ class PartKom extends CApplicationComponent
      */
     public $WSDLsearch;
 
-    private $params = [];
-
     public function setLogin($login)
     {
         $this->login = $login;
@@ -35,8 +33,6 @@ class PartKom extends CApplicationComponent
 
     public function init()
     {
-        $params['login']    = $this->login;
-        $params['password'] = $this->password;
         return parent::init();
     }
 
